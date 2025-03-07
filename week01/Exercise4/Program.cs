@@ -23,7 +23,7 @@ class Program
             sum += item;
         }
         Console.WriteLine($"The sum of the numbers is: {sum}");
-        Console.WriteLine($"The average of the numbers is: {sum / numbers.Count}");
+        Console.WriteLine($"The average of the numbers is: {(float)sum / numbers.Count}");
         Console.WriteLine($"The largest number is: {numbers.Max()}");
     }
 }
