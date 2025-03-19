@@ -70,6 +70,9 @@ public class Journal
                 writer.WriteLine(entry._date);
                 writer.WriteLine(entry._promptText);
                 writer.WriteLine(entry._entryText);
+                writer.WriteLine(entry._weather);
+                writer.WriteLine(entry._mood);
+                writer.WriteLine(entry._location);
                 writer.WriteLine("-----");
             }
         }
@@ -83,7 +86,7 @@ public class Journal
 
         if (!File.Exists(filename))
         {
-            Console.WriteLine("File not found!\n");
+            Console.WriteLine("⚠️ File not found!\n");
             return;
         }
 
@@ -93,16 +96,28 @@ public class Journal
         {
             string date,
                 prompt,
-                response;
+                response,
+                weather;
+            Console.WriteLine("\nFile Contents:\n----------------------");
+
             while ((date = reader.ReadLine()) != null)
             {
                 prompt = reader.ReadLine();
                 response = reader.ReadLine();
-                string weather = reader.ReadLine();
+                weather = reader.ReadLine();
                 reader.ReadLine();
-                _entries.Add(new Entry(prompt, response, weather, date, "defaultTag"));
+
+                Entry newEntry = new Entry(prompt, response, weather, date, "defaultTag");
+                _entries.Add(newEntry);
+
+                Console.WriteLine($"Date: {date}");
+                Console.WriteLine($"Prompt: {prompt}");
+                Console.WriteLine($"Entry: {response}");
+                Console.WriteLine($"Weather: {weather}");
+                Console.WriteLine($"Mood: {reader.ReadLine()}");
+                Console.WriteLine("----------------------");
             }
         }
-        Console.WriteLine("Journal loaded successfully!\n");
+        Console.WriteLine("\nJournal loaded successfully!\n");
     }
 }
