@@ -1,4 +1,3 @@
-// Program.cs
 using System;
 
 namespace YouTubeTracker
