@@ -18,7 +18,7 @@ namespace MindfulnessApp
             Console.WriteLine();
             Console.Write("How long, in seconds, would you like for your session? ");
             Duration = int.Parse(Console.ReadLine());
-            
+
             Console.WriteLine();
             Console.WriteLine("Get ready to begin...");
             ShowSpinner(3);
