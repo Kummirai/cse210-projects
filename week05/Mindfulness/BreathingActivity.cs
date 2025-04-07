@@ -7,7 +7,8 @@ namespace MindfulnessApp
         public BreathingActivity()
         {
             Name = "Breathing";
-            Description = "This activity will help you relax by walking you through breathing in and out slowly. Clear your mind and focus on your breathing.";
+            Description =
+                "This activity will help you relax by walking you through breathing in and out slowly. Clear your mind and focus on your breathing.";
         }
 
         public override void Run()
@@ -23,7 +24,8 @@ namespace MindfulnessApp
                 Console.Write("Breathe in... ");
                 ShowCountdown(4);
 
-                if (DateTime.Now >= endTime) break;
+                if (DateTime.Now >= endTime)
+                    break;
 
                 Console.WriteLine();
                 Console.Write("Breathe out... ");
