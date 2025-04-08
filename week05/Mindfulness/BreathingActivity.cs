@@ -21,14 +21,14 @@ namespace MindfulnessApp
             while (DateTime.Now < endTime)
             {
                 Console.WriteLine();
-                Console.Write("Breathe in... ");
+                Console.Write("Breathe in ... ");
                 ShowCountdown(4);
 
                 if (DateTime.Now >= endTime)
                     break;
 
                 Console.WriteLine();
-                Console.Write("Breathe out... ");
+                Console.Write("Breathe out ... ");
                 ShowCountdown(6);
             }
 

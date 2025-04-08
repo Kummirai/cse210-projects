@@ -49,6 +49,7 @@ namespace MindfulnessApp
             {
                 Console.Write($"{i} ");
                 Thread.Sleep(1000);
+                Console.Write("\b\b \b");
             }
             Console.WriteLine();
         }
