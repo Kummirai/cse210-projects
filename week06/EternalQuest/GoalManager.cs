@@ -1,7 +1,7 @@
-using EternalQuest.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using EternalQuest.Models;
 
 namespace EternalQuest.Services
 {
@@ -13,7 +13,7 @@ namespace EternalQuest.Services
         private AchievementService _achievementService;
         private int _streakDays;
         private DateTime _lastRecordDate;
-        
+
         public GoalManager()
         {
             _goals = new List<Goal>();
@@ -23,7 +23,7 @@ namespace EternalQuest.Services
             _streakDays = 0;
             _lastRecordDate = DateTime.MinValue;
         }
-        
+
         public void DisplayGoals()
         {
             if (_goals.Count == 0)
@@ -31,7 +31,7 @@ namespace EternalQuest.Services
                 Console.WriteLine("No goals have been created yet.");
                 return;
             }
-            
+
             Console.WriteLine("\nYour Goals:");
             for (int i = 0; i < _goals.Count; i++)
             {
@@ -39,7 +39,7 @@ namespace EternalQuest.Services
                 _goals[i].DisplayGoal();
             }
         }
-        
+
         public void CreateGoal()
         {
             Console.WriteLine("\nSelect Goal Type:");
@@ -48,21 +48,21 @@ namespace EternalQuest.Services
             Console.WriteLine("3. Checklist Goal (requires multiple completions)");
             Console.WriteLine("4. Negative Goal (bad habit to avoid)");
             Console.WriteLine("5. Progress Goal (track progress toward a large goal)");
-            
+
             Console.Write("Enter goal type: ");
             string typeChoice = Console.ReadLine();
-            
+
             Console.Write("Enter goal name: ");
             string name = Console.ReadLine();
-            
+
             Console.Write("Enter goal description: ");
             string description = Console.ReadLine();
-            
+
             Console.Write("Enter point value: ");
             int points = int.Parse(Console.ReadLine());
-            
+
             Goal newGoal = null;
-            
+
             switch (typeChoice)
             {
                 case "1":
@@ -76,7 +76,13 @@ namespace EternalQuest.Services
                     int targetCount = int.Parse(Console.ReadLine());
                     Console.Write("Enter bonus points: ");
                     int bonusPoints = int.Parse(Console.ReadLine());
-                    newGoal = new ChecklistGoal(name, description, points, targetCount, bonusPoints);
+                    newGoal = new ChecklistGoal(
+                        name,
+                        description,
+                        points,
+                        targetCount,
+                        bonusPoints
+                    );
                     break;
                 case "4":
                     newGoal = new NegativeGoal(name, description, points);
@@ -90,17 +96,17 @@ namespace EternalQuest.Services
                     Console.WriteLine("Invalid goal type.");
                     return;
             }
-            
+
             _goals.Add(newGoal);
             Console.WriteLine($"New goal '{name}' created successfully!");
-            
+
             // Check for first goal achievement
             if (_goals.Count == 1)
             {
                 _achievementService.UnlockAchievement("First Step", ref _score);
             }
         }
-        
+
         public void RecordGoalEvent()
         {
             if (_goals.Count == 0)
@@ -108,35 +114,41 @@ namespace EternalQuest.Services
                 Console.WriteLine("No goals available to record.");
                 return;
             }
-            
+
             DisplayGoals();
             Console.Write("Enter the number of the goal to record: ");
-            if (int.TryParse(Console.ReadLine(), out int goalNumber) && goalNumber > 0 && goalNumber <= _goals.Count)
+            if (
+                int.TryParse(Console.ReadLine(), out int goalNumber)
+                && goalNumber > 0
+                && goalNumber <= _goals.Count
+            )
             {
                 Goal selectedGoal = _goals[goalNumber - 1];
-                
+
                 // Check streak
                 DateTime today = DateTime.Today;
                 if (_lastRecordDate != today.AddDays(-1))
                 {
                     _streakDays = 0;
                 }
-                
+
                 selectedGoal.RecordEvent();
                 int pointsEarned = selectedGoal.GetPoints();
-                
+
                 // Apply streak bonus
                 if (_streakDays > 0)
                 {
                     int streakBonus = (int)(pointsEarned * (_streakDays * 0.1)); // 10% bonus per day
                     pointsEarned += streakBonus;
-                    Console.WriteLine($"Streak bonus: +{streakBonus} points ({_streakDays} day streak)");
+                    Console.WriteLine(
+                        $"Streak bonus: +{streakBonus} points ({_streakDays} day streak)"
+                    );
                 }
-                
+
                 _score += pointsEarned;
                 _lastRecordDate = today;
                 _streakDays++;
-                
+
                 // Check for level up
                 int newLevel = _score / 1000 + 1;
                 if (newLevel > _level)
@@ -145,7 +157,7 @@ namespace EternalQuest.Services
                     _level = newLevel;
                     _achievementService.CheckLevelAchievements(_level, ref _score);
                 }
-                
+
                 // Random reward chance (10%)
                 Random rand = new Random();
                 if (rand.Next(10) == 0)
@@ -154,10 +166,12 @@ namespace EternalQuest.Services
                     _score += bonus;
                     Console.WriteLine($"Random Reward! You earned {bonus} bonus points!");
                 }
-                
-                Console.WriteLine($"Recorded progress for '{selectedGoal.Name}'. Earned {pointsEarned} points.");
+
+                Console.WriteLine(
+                    $"Recorded progress for '{selectedGoal.Name}'. Earned {pointsEarned} points."
+                );
                 Console.WriteLine($"Total Score: {_score} (Level {_level})");
-                
+
                 _achievementService.CheckScoreAchievements(_score);
             }
             else
@@ -165,21 +179,23 @@ namespace EternalQuest.Services
                 Console.WriteLine("Invalid goal number.");
             }
         }
-        
+
         public void DisplayScore()
         {
             Console.WriteLine($"\nCurrent Score: {_score} points");
             Console.WriteLine($"Level: {_level}");
             Console.WriteLine($"Current Streak: {_streakDays} days");
-            
+
             // Calculate points to next level
             int pointsToNextLevel = 1000 - (_score % 1000);
             if (pointsToNextLevel < 1000)
             {
-                Console.WriteLine($"You need {pointsToNextLevel} more points to reach level {_level + 1}");
+                Console.WriteLine(
+                    $"You need {pointsToNextLevel} more points to reach level {_level + 1}"
+                );
             }
         }
-        
+
         public void SaveGoals()
         {
             using (StreamWriter writer = new StreamWriter("goals.txt"))
@@ -188,12 +204,12 @@ namespace EternalQuest.Services
                 writer.WriteLine(_level);
                 writer.WriteLine(_streakDays);
                 writer.WriteLine(_lastRecordDate.ToString());
-                
+
                 foreach (Goal goal in _goals)
                 {
                     string goalType = goal.GetType().Name;
                     writer.Write($"{goalType}|{goal.Name}|{goal.IsComplete}|");
-                    
+
                     if (goal is SimpleGoal)
                     {
                         writer.WriteLine();
@@ -204,7 +220,9 @@ namespace EternalQuest.Services
                     }
                     else if (goal is ChecklistGoal checklist)
                     {
-                        writer.WriteLine($"{checklist.GetPoints()}|{checklist._targetCount}|{checklist._bonusPoints}");
+                        writer.WriteLine(
+                            $"{checklist.GetPoints()}|{checklist._targetCount}|{checklist._bonusPoints}"
+                        );
                     }
                     else if (goal is NegativeGoal)
                     {
@@ -216,10 +234,10 @@ namespace EternalQuest.Services
                     }
                 }
             }
-            
+
             Console.WriteLine("Goals saved successfully!");
         }
-        
+
         public void LoadGoals()
         {
             if (!File.Exists("goals.txt"))
@@ -227,25 +245,25 @@ namespace EternalQuest.Services
                 Console.WriteLine("No saved goals found.");
                 return;
             }
-            
+
             _goals.Clear();
-            
+
             using (StreamReader reader = new StreamReader("goals.txt"))
             {
                 _score = int.Parse(reader.ReadLine());
                 _level = int.Parse(reader.ReadLine());
                 _streakDays = int.Parse(reader.ReadLine());
                 _lastRecordDate = DateTime.Parse(reader.ReadLine());
-                
+
                 while (!reader.EndOfStream)
                 {
                     string[] parts = reader.ReadLine().Split('|');
                     string goalType = parts[0];
                     string name = parts[1];
                     bool isComplete = bool.Parse(parts[2]);
-                    
+
                     Goal goal = null;
-                    
+
                     switch (goalType)
                     {
                         case "SimpleGoal":
@@ -270,7 +288,7 @@ namespace EternalQuest.Services
                             ((ProgressGoal)goal)._currentProgress = currentProgress;
                             break;
                     }
-                    
+
                     if (goal != null)
                     {
                         goal._isComplete = isComplete;
@@ -278,11 +296,11 @@ namespace EternalQuest.Services
                     }
                 }
             }
-            
+
             Console.WriteLine("Goals loaded successfully!");
             Console.WriteLine($"Loaded {_goals.Count} goals with a total score of {_score}.");
         }
-        
+
         public void DisplayAchievements()
         {
             _achievementService.DisplayAchievements();
