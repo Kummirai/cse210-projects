@@ -1,11 +1,12 @@
-using System;
-
 namespace EternalQuest.Models
 {
     public class ProgressGoal : Goal
     {
         private int _currentProgress;
         private int _targetProgress;
+
+        public int CurrentProgress => _currentProgress;
+        public int TargetProgress => _targetProgress;
 
         public ProgressGoal(string name, string description, int points, int targetProgress)
             : base(name, description, points)

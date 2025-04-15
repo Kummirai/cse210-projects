@@ -221,7 +221,7 @@ namespace EternalQuest.Services
                     else if (goal is ChecklistGoal checklist)
                     {
                         writer.WriteLine(
-                            $"{checklist.GetPoints()}|{checklist._targetCount}|{checklist._bonusPoints}"
+                            $"{checklist.GetPoints()}|{checklist.TargetCount}|{checklist.BonusPoints}"
                         );
                     }
                     else if (goal is NegativeGoal)
@@ -230,7 +230,7 @@ namespace EternalQuest.Services
                     }
                     else if (goal is ProgressGoal progress)
                     {
-                        writer.WriteLine($"{progress._currentProgress}|{progress._targetProgress}");
+                        writer.WriteLine($"{progress.CurrentProgress}|{progress.TargetProgress}");
                     }
                 }
             }

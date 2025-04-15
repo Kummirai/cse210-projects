@@ -6,6 +6,10 @@ namespace EternalQuest.Models
         private int _currentCount;
         private int _bonusPoints;
 
+        public int TargetCount => _targetCount;
+        public int CurrentCount => _currentCount;
+        public int BonusPoints => _bonusPoints;
+
         public ChecklistGoal(
             string name,
             string description,

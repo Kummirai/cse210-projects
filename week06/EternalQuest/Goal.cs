@@ -8,6 +8,8 @@ namespace EternalQuest.Models
         protected bool _isComplete;
 
         public string Name => _name;
+        public string Description => _description;
+        public int Points => _points;
         public bool IsComplete => _isComplete;
 
         public Goal(string name, string description, int points)
