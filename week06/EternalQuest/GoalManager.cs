@@ -268,6 +268,8 @@ namespace EternalQuest.Services
                     {
                         case "SimpleGoal":
                             goal = new SimpleGoal(name, "", 0);
+                            if (isComplete)
+                                goal.RecordEvent();
                             break;
                         case "EternalGoal":
                             goal = new EternalGoal(name, "", 0);
@@ -277,21 +279,27 @@ namespace EternalQuest.Services
                             int targetCount = int.Parse(parts[4]);
                             int bonusPoints = int.Parse(parts[5]);
                             goal = new ChecklistGoal(name, "", points, targetCount, bonusPoints);
+                            if (isComplete)
+                                goal.RecordEvent();
                             break;
                         case "NegativeGoal":
                             goal = new NegativeGoal(name, "", 0);
+                            if (isComplete)
+                                goal.RecordEvent();
                             break;
                         case "ProgressGoal":
                             int currentProgress = int.Parse(parts[3]);
                             int targetProgress = int.Parse(parts[4]);
-                            goal = new ProgressGoal(name, "", 0, targetProgress);
-                            ((ProgressGoal)goal)._currentProgress = currentProgress;
+                            var progressGoal = new ProgressGoal(name, "", 0, targetProgress);
+                            progressGoal.SetProgress(currentProgress);
+                            if (isComplete)
+                                progressGoal.RecordEvent();
+                            goal = progressGoal;
                             break;
                     }
 
                     if (goal != null)
                     {
-                        goal._isComplete = isComplete;
                         _goals.Add(goal);
                     }
                 }

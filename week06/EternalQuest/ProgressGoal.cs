@@ -15,6 +15,15 @@ namespace EternalQuest.Models
             _targetProgress = targetProgress;
         }
 
+        public void SetProgress(int progress)
+        {
+            _currentProgress = progress;
+            if (_currentProgress >= _targetProgress)
+            {
+                _isComplete = true;
+            }
+        }
+
         public override void RecordEvent()
         {
             Console.Write(
