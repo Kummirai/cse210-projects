@@ -12,7 +12,7 @@ namespace ExerciseTracking
             {
                 new Running(new DateTime(2022, 11, 3), 30, 3.0),
                 new Cycling(new DateTime(2022, 11, 3), 30, 9.7),
-                new Swimming(new DateTime(2022, 11, 3), 30, 60)
+                new Swimming(new DateTime(2022, 11, 3), 30, 60),
             };
 
             // Display summaries
